@@ -16,10 +16,6 @@ RUN echo "Package: pdns-*" >> /etc/apt/preferences.d/pdns && \
 RUN wget -O- https://repo.powerdns.com/FD380FBB-pub.asc | apt-key add - && apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install pdns-recursor
 
-# Installing python modules
-ADD requirements.txt /
-RUN pip3 install -r requirements.txt
-
 ADD src /app
 ADD src/recursor.conf /etc/powerdns/recursor.conf
 
