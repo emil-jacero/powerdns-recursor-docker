@@ -30,10 +30,14 @@ curl -H "X-API-KEY: $PDNS_AUTH_API_KEY" http://$PDNS_AUTH_API_HOST:$PDNS_AUTH_AP
   echo "$domain=$PDNS_AUTH_API_HOST" >> /etc/powerdns/forward.conf
 done
 
+
 if [ ! -z ${EXTRA_FORWARD+x} ]; then
     echo $EXTRA_FORWARD |tr ',' '\n' >> /etc/powerdns/forward.conf
   fi
 
+
+mkdir /etc/powerdns/recursor.d
+touch /etc/powerdns/recursor.d/forward.conf
 echo ""
 echo "forward-zones-file=/etc/powerdns/forward.conf" > /etc/powerdns/recursor.d/forward.conf
 echo "Starting PDNS Recursor"
