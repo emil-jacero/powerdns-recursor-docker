@@ -36,8 +36,15 @@ if [ ! -z ${EXTRA_FORWARD+x} ]; then
   fi
 
 
-mkdir /etc/powerdns/recursor.d
-touch /etc/powerdns/recursor.d/forward.conf
+if [ -d "/etc/powerdns/recursor.d" ]; then
+  rm -rf /etc/powerdns/recursor.d
+  touch /etc/powerdns/recursor.d/forward.conf
+else
+  mkdir /etc/powerdns/recursor.d
+  touch /etc/powerdns/recursor.d/forward.conf
+fi
+
+
 echo ""
 echo "forward-zones-file=/etc/powerdns/forward.conf" > /etc/powerdns/recursor.d/forward.conf
 echo "Starting PDNS Recursor"
