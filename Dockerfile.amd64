@@ -26,6 +26,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ADD src /app
 ADD src/recursor.conf /etc/powerdns/recursor.conf
 
+RUN mkdir /var/run/powerdns-recursor
+
 EXPOSE 53/tcp 53/udp
 
 WORKDIR /app
