@@ -38,6 +38,7 @@ if [ ! -z ${EXTRA_FORWARD+x} ]; then
 
 if [ -d "/etc/powerdns/recursor.d" ]; then
   rm -rf /etc/powerdns/recursor.d
+  mkdir /etc/powerdns/recursor.d
   touch /etc/powerdns/recursor.d/forward.conf
 else
   mkdir /etc/powerdns/recursor.d
