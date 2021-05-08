@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 #ip=`getent hosts $PDNS_AUTH_HOSTNAME | awk '{ print $1 }'`
 echo ""
 echo "Authoritive PDNS IP: $PDNS_AUTH_API_HOST"
@@ -25,9 +27,9 @@ touch /etc/powerdns/forward.conf
 echo ""
 echo "Connecting to API on http://$PDNS_AUTH_API_HOST:$PDNS_AUTH_API_PORT/"
 echo ""
-curl -H "X-API-KEY: $PDNS_AUTH_API_KEY" http://$PDNS_AUTH_API_HOST:$PDNS_AUTH_API_PORT/api/v1/servers/localhost/zones | jq '.[]|.name' | cut -d'"' -f2 | while read domain; do
+curl -H "X-API-KEY: $PDNS_AUTH_API_KEY" http://$PDNS_AUTH_API_HOST:$PDNS_AUTH_API_PORT/api/v1/servers/localhost/zones  | jq '.[]|.name' | cut -d'"' -f2 | while read domain; do
   echo "Adding $domain=$PDNS_AUTH_API_HOST to forward config"
-  echo "$domain=$PDNS_AUTH_API_HOST" >> /etc/powerdns/forward.conf
+  echo "$domain=$PDNS_AUTH_API_HOST:5300" >> /etc/powerdns/forward.conf
 done
 
 
@@ -50,5 +52,12 @@ echo ""
 echo "forward-zones-file=/etc/powerdns/forward.conf" > /etc/powerdns/recursor.d/forward.conf
 echo "Starting PDNS Recursor"
 echo ""
+
+template () {
+    arg1=$1
+    arg2=$2
+    python3 $DIR/lib/template.py --template $1 --output $2
+}
+template $DIR/templates/recursor.conf.j2 /etc/powerdns/recursor.conf
 
 pdns_recursor --daemon=no --disable-syslog --write-pid=no
