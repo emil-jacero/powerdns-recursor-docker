@@ -1,6 +1,14 @@
+[![GitHub license](https://img.shields.io/github/license/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/stargazers) [![GitHub issues](https://img.shields.io/github/issues/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/issues)
+
+
 # powerdns-recursor-docker
 
 PowerDNS recursor docker image
+
+## Related projects
+
+- [powerdns-auth-docker](https://github.com/emil-jacero/powerdns-auth-docker)
+- [powerdns-dnsdist-docker](https://github.com/emil-jacero/powerdns-dnsdist-docker)
 
 ## Supported Architectures
 
