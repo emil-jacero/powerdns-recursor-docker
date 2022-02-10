@@ -11,11 +11,10 @@ from lib.logger import logger as log
 from lib.template import Template
 
 # Set working directory
-# os.chdir(os.path.dirname(os.path.realpath(__file__)))
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 # PATHS
-#base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-base_dir = os.path.realpath(__file__)
+base_dir = os.path.dirname(os.path.realpath(__file__))
 template_path = os.path.join(base_dir, 'templates')
 render_recursor_conf = "/etc/powerdns/recursor.conf"
 render_forward_conf = "/etc/powerdns/forward.conf"
