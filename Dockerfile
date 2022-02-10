@@ -26,6 +26,9 @@ RUN echo "Package: pdns-*" >> /etc/apt/preferences.d/pdns && \
 RUN curl -fsSL https://repo.powerdns.com/FD380FBB-pub.asc | apt-key add - && apt update
 RUN apt -y install pdns-recursor
 
+# Download latest named.root as fallback if entrypoint fails to download
+RUN wget https://www.internic.net/domain/named.root -O /var/named.root
+
 ENV TZ=Etc/UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -35,7 +38,7 @@ RUN pip3 install -r requirements.txt
 
 # Prepare directories for PowerDNS
 RUN touch /recursor.conf && chown -R 101:101 /recursor.conf
-RUN mkdir -p /var/run/pdns-recursor && chown -R 101:101 /var/run/pdns-recursor
+RUN mkdir -p /etc/powerdns/recursor.dv && touch /etc/powerdns/forward.conf
 RUN mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-recursor
 
 # Add src
