@@ -27,8 +27,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ADD requirements.txt /
 RUN pip3 install -r requirements.txt
 
+# Prepare directories for PowerDNS
+RUN mkdir -p /var/run/pdns-recursor && chown -R 101:101 /var/run/pdns-recursor
+RUN mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-recursor
+
+# Add src
 ADD src /app
-RUN mkdir /var/run/powerdns-recursor
+RUN chown -R 101:101 /app
 
 EXPOSE 53/tcp 53/udp
 
