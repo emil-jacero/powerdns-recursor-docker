@@ -1,40 +1,21 @@
 [![GitHub license](https://img.shields.io/github/license/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/stargazers) [![GitHub issues](https://img.shields.io/github/issues/emil-jacero/powerdns-recursor-docker)](https://github.com/emil-jacero/powerdns-recursor-docker/issues)
 
+# powerdns-auth-docker
 
-# powerdns-recursor-docker
-
-PowerDNS recursor docker image
+This is a PowerDNS authoritative docker image designed to handle minor and major updates seamlessly.
 
 ## Related projects
 
-- [powerdns-auth-docker](https://github.com/emil-jacero/powerdns-auth-docker)
+- [powerdns-recursor-docker](https://github.com/emil-jacero/powerdns-recursor-docker)
 - [powerdns-dnsdist-docker](https://github.com/emil-jacero/powerdns-dnsdist-docker)
 
 ## Supported Architectures
 
 The images are built and tested on multiple platforms.
 
-| Architecture | Tag |
-| :----: | --- |
-| x86-64 | amd64-latest |
-| arm64 | arm64v8-latest |
-| armv7l | armhf-latest |
-
-## Version Tags
-
-This image provides various versions that are available via tags. `latest` tag provides the latest stable version.
-
-<span style="color:red">**NOTE: Sadly PowerDNS does not support arm on 4.5 yet.**</span>.
-
-| Tag | Description |
-| :----: | --- |
-| amd64-latest | Latest stable version |
-| amd64-4.5.x | Latest micro release of 4.5 |
-| amd64-4.4.x | Latest micro release of 4.4 |
-| arm64v8-latest | Latest stable version |
-| arm64v8-4.4.x | Latest micro release of 4.4 |
-| armhf-latest | Latest stable version |
-| armhf-4.4.x | Latest micro release of 4.4 |
+| Architecture |
+| :----: |
+| x86-64 |
 
 ## Configuration
 
@@ -47,6 +28,8 @@ You configure using environment variables only. The environment variable will be
 **PDNS config:** forward-zones-file
 
 ### Required environment variables
+
+These variables are used to connect to the PowerDNS authorative instance and get the zones to add to the `forward-zones-file`.
 
 | Name | Value | Default |
 | :----: | --- | --- |
@@ -99,16 +82,11 @@ services:
       ENV_INCLUDE_DIR: /etc/powerdns/recursor.d
       ENV_FORWARD_ZONES_FILE: /etc/powerdns/forward.conf
       ENV_ENTROPY_SOURCE: /dev/urandom
-      ENV_SOCKET_DIR: /var/run/powerdns-recursor
-      ENV_SOCKET_MODE: 660
       ENV_LOCAL_ADDRESS: 192.168.100.20
       ENV_LOCAL_PORT: 53
-      ENV_USE_INCOMING_EDNS_SUBNET: "yes"
-      ENV_ECS_IPV4_BITS: 32
-      ENV_ECS_IPV6_BITS: 128
       ENV_QUIET: "yes"
-      ENV_SETGID: pdns
-      ENV_SETUID: pdns
+      ENV_SETGID: 101
+      ENV_SETUID: 101
       ENV_DNSSEC: "off"
       ENV_WEBSERVER: "yes"
       ENV_WEBSERVER_PASSWORD: CHANGEME_PASSWORD
@@ -121,4 +99,5 @@ services:
       PDNS_AUTH_API_PORT: 8001
       PDNS_AUTH_API_KEY: CHANGEME_PASSWORD
       EXTRA_FORWARD: ""
+      ENV_FORWARD_ZONES_RECURSE: ".=1.1.1.1,.=1.0.0.1"  # This redirect all other queries
 ```
