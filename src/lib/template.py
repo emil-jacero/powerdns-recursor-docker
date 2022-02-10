@@ -84,6 +84,8 @@ defaults = {
     "socket-dir": "/var/run/powerdns-recursor",
     "socket-mode": 660
 }
+logger.debug(f"Default configuration")
+logger.debug(json.dumps(defaults, indent=2))
 
 # Read config from file (/recursor.conf) and parse to dict
 file_conf = get_from_file("/recursor.conf")
