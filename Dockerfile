@@ -7,7 +7,7 @@ ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 # Build arguments with sane defaults
 ARG PDNS_VERSION=45
 
-RUN apt-get update && apt-get -y install tzdata
+RUN apt update && apt -y install tzdata
 RUN apt install -y ca-certificates curl wget gnupg2 jq dnsutils python3 python3-pip python3-psycopg2 && apt -y upgrade
 
 # NOTE: DO NOT OVERWRITE THIS VARIABLE... EVER!
@@ -23,8 +23,8 @@ RUN touch /etc/apt/sources.list.d/pdns.list && echo deb [arch=amd64] http://repo
 RUN echo "Package: pdns-*" >> /etc/apt/preferences.d/pdns && \
     echo "Pin: origin repo.powerdns.com" >> /etc/apt/preferences.d/pdns && \
     echo "Pin-Priority: 600" >> /etc/apt/preferences.d/pdns
-RUN wget -O- https://repo.powerdns.com/FD380FBB-pub.asc | apt-key add - && apt-get update
-RUN apt-get -y install pdns-recursor
+RUN curl -fsSL https://repo.powerdns.com/FD380FBB-pub.asc | apt-key add - && apt update
+RUN apt -y install pdns-recursor
 
 ENV TZ=Etc/UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
