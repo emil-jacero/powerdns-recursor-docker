@@ -139,8 +139,8 @@ class Template:
         return env.get_template(name)
 
 
-def main(template, output_file, env_search_term):
-    temp = Template(env_search_term=env_search_term)
+def main(template, output_file):
+    temp = Template()
     temp.render_template(template=template, output_file=output_file)
 
 
@@ -155,12 +155,5 @@ if __name__ == "__main__":
                            dest='output_file',
                            type=str,
                            help='Choose a destination')
-    my_parser.add_argument('--env-search-term',
-                           dest='env_search_term',
-                           type=str,
-                           default='ENV',
-                           help='What should i look for?')
     args = my_parser.parse_args()
-    main(template=args.template,
-         output_file=args.output_file,
-         env_search_term=args.env_search_term)
+    main(template=args.template, output_file=args.output_file)
