@@ -2,6 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+export NAMED_ROOT_URL="https://www.internic.net/domain/named.root"
+
 echo ""
 echo "Authoritive PDNS IP: $PDNS_AUTH_API_HOST"
 echo ""
@@ -9,7 +11,7 @@ echo ""
 echo ""
 echo "Download latest named.root"
 echo ""
-wget https://www.internic.net/domain/named.root -O /var/named.root
+wget $NAMED_ROOT_URL -O /var/named.root
 
 LOOPS=0
 until curl -H "X-API-KEY: $PDNS_AUTH_API_KEY" http://$PDNS_AUTH_API_HOST:$PDNS_AUTH_API_PORT/api/v1/servers; do

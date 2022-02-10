@@ -12,6 +12,12 @@ RUN apt install -y ca-certificates curl wget gnupg2 jq dnsutils python3 python3-
 
 # NOTE: DO NOT OVERWRITE THIS VARIABLE... EVER!
 ENV POWERDNS_VERSION=$PDNS_VERSION
+# Sane Defaults
+ENV ENV_HINT_FILE=/var/named.root
+ENV ENV_INCLUDE_DIR=/etc/powerdns/recursor.d
+ENV ENV_FORWARD_ZONES_FILE=/etc/powerdns/forward.conf
+ENV ENV_ENTROPY_SOURCE=/dev/urandom
+ENV ENV_SOCKET_DIR=/var/run/powerdns-recursor
 
 RUN touch /etc/apt/sources.list.d/pdns.list && echo deb [arch=amd64] http://repo.powerdns.com/ubuntu focal-rec-$PDNS_VERSION main >> /etc/apt/sources.list.d/pdns.list
 RUN echo "Package: pdns-*" >> /etc/apt/preferences.d/pdns && \

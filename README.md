@@ -27,16 +27,22 @@ You configure using environment variables only. The environment variable will be
 
 **PDNS config:** forward-zones-file
 
-### Required environment variables
+## Required environment variables
 
 These variables are used to connect to the PowerDNS authorative instance and get the zones to add to the `forward-zones-file`.
 
+| Name | Value | Example |
+| :----: | --- | --- |
+| `PDNS_AUTH_API_HOST` | Authorative DNS IP | `127.0.0.1` |
+| `PDNS_AUTH_API_DNS_PORT` | Authorative DNS Port | `5300` |
+| `PDNS_AUTH_API_PORT` | Authorative DNS API Port | `8001` |
+| `PDNS_AUTH_API_KEY` | Authorative DNS API Key | `N/A` |
+
+## Optional environment variables
+
 | Name | Value | Default |
 | :----: | --- | --- |
-| `PDNS_AUTH_API_HOST` | Authorative DNS IP | 127.0.0.1 |
-| `PDNS_AUTH_API_DNS_PORT` | Authorative DNS IP | N/A |
-| `PDNS_AUTH_API_PORT` | Authorative DNS API Port | 8001 |
-| `PDNS_AUTH_API_KEY` | Authorative DNS API Key | N/A |
+| `NAMED_ROOT_URL` | Where to download named.root from | `"https://www.internic.net/domain/named.root"` |
 
 ## Examples
 
