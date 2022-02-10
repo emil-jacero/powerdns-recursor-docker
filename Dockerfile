@@ -48,4 +48,4 @@ RUN chown -R 101:101 /app
 EXPOSE 53/tcp 53/udp
 
 WORKDIR /app
-ENTRYPOINT /app/entrypoint.sh
+ENTRYPOINT /app/entrypoint.py
