@@ -11,7 +11,7 @@ from lib.logger import logger as log
 from lib.template import Template
 
 # Set working directory
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
+# os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 # PATHS
 base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
