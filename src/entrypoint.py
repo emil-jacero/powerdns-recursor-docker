@@ -16,15 +16,21 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 # PATHS
 base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 template_path = os.path.join(base_dir, 'templates')
+render_recursor_conf = "/etc/powerdns/recursor.conf"
+render_forward_conf = "/etc/powerdns/forward.conf"
+named_root_path = "/var/named.root"
+
 if os.getenv('DEV') == "true":
     template_path = os.path.join(base_dir, 'src/templates')
     render_recursor_conf = f"{base_dir}/dev/recursor.conf"
     render_forward_conf = f"{base_dir}/dev/forward.conf"
     named_root_path = f"{base_dir}/dev/named.root"
-else:
-    render_recursor_conf = "/etc/powerdns/recursor.conf"
-    render_forward_conf = "/etc/powerdns/forward.conf"
-    named_root_path = "/var/named.root"
+
+log.debug(base_dir)
+log.debug(template_path)
+log.debug(render_recursor_conf)
+log.debug(render_forward_conf)
+log.debug(named_root_path)
 
 # Init
 renderer = Template()
