@@ -48,7 +48,7 @@ These variables are used to connect to the PowerDNS authorative instance and get
 
 ### Single authoritative secondary with SQLite and PowerDNS recursor
 
-```
+```yaml
 version: '3'
 services:
   pdns-auth:
