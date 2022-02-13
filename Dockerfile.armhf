@@ -1,11 +1,11 @@
-FROM ubuntu:20.04
+FROM debian:buster
 
 LABEL maintainer="emil@jacero.se"
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 # Build arguments with sane defaults
-ARG PDNS_VERSION=45
+ARG PDNS_VERSION=44
 
 RUN apt update && apt -y install tzdata
 RUN apt install -y ca-certificates curl wget gnupg2 jq dnsutils python3 python3-pip python3-psycopg2 && apt -y upgrade
@@ -13,7 +13,7 @@ RUN apt install -y ca-certificates curl wget gnupg2 jq dnsutils python3 python3-
 # NOTE: DO NOT OVERWRITE THIS VARIABLE... EVER!
 ENV POWERDNS_VERSION=$PDNS_VERSION
 
-RUN touch /etc/apt/sources.list.d/pdns.list && echo deb [arch=amd64] http://repo.powerdns.com/ubuntu focal-rec-$PDNS_VERSION main >> /etc/apt/sources.list.d/pdns.list
+RUN touch /etc/apt/sources.list.d/pdns.list && echo deb [arch=armhf] http://repo.powerdns.com/raspbian buster-rec-$PDNS_VERSION main >> /etc/apt/sources.list.d/pdns.list
 RUN echo "Package: pdns-*" >> /etc/apt/preferences.d/pdns && \
     echo "Pin: origin repo.powerdns.com" >> /etc/apt/preferences.d/pdns && \
     echo "Pin-Priority: 600" >> /etc/apt/preferences.d/pdns
@@ -32,13 +32,11 @@ ADD requirements.txt /
 RUN pip3 install -r requirements.txt
 
 # Prepare directories for PowerDNS
-RUN touch /recursor.conf && chown -R 101:101 /recursor.conf
-RUN mkdir -p /etc/powerdns/recursor.dv && touch /etc/powerdns/forward.conf
 RUN mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-recursor
+RUN mkdir -p /var/run/pdns-recursor && chown -R 101:101 /var/run/pdns-recursor
 
 # Add src
 ADD src /app
-RUN chown -R 101:101 /app
 
 WORKDIR /app
 EXPOSE 53/tcp 53/udp
