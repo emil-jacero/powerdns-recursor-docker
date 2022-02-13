@@ -44,7 +44,7 @@ def get_from_environment(env_search_term="ENV_"):
             k = k.replace(f"{env_search_term}", "").replace("_", "-").lower()
             obj = {k: v}
             enviroment.update(obj)
-    log.debug(json.dumps(enviroment, indent=2))
+    log.debug(enviroment)
     return enviroment
 
 
@@ -60,7 +60,7 @@ def get_from_file(file):
             split_line = line.split("=")
             obj = {split_line[0]: split_line[1]}
             pdns_config.update(obj)
-        log.debug(json.dumps(pdns_config, indent=2))
+        log.debug(pdns_config)
     except IOError as error:
         log.warning(f"Could not find  '/recursor.conf', moving on...")
     except Exception as error:
@@ -72,7 +72,7 @@ def merge_dicts_overwrite(defaults_dict, dict_list):
     log.info(f"Merging configurations")
     for dict in dict_list:
         defaults_dict.update(dict)
-    log.debug(json.dumps(defaults_dict, indent=2))
+    log.debug(defaults_dict)
     return defaults_dict
 
 
@@ -100,6 +100,7 @@ def parse_recursor_conf():
         "local-port": 53,
         "hint-file": "/var/named.root",
         "include-dir": "/etc/powerdns/recursor.d",
+        "forward-zones-file": "/etc/powerdns/forward.conf",
         "forward-zones-file": render_forward_conf,
         "entropy-source": "/dev/urandom",
         "socket-dir": "/var/run/powerdns-recursor",
@@ -182,11 +183,8 @@ def main():
     # Download named.root
     download_named_root()
 
-    forward_conf = parse_forward_zones_conf()
-    log.info(json.dumps(forward_conf))
-
     recursor_conf = parse_recursor_conf()
-    log.debug(json.dumps(recursor_conf))
+    forward_conf = parse_forward_zones_conf()
 
     # Write templates
     template = os.path.join(template_path, "recursor.conf.j2")
@@ -198,6 +196,22 @@ def main():
     renderer.render_template(template=template,
                              output_file=render_forward_conf,
                              data=forward_conf)
+
+    if os.getenv('LOG_LEVEL') == "DEBUG":
+        log.debug("------------------------------------------")
+        log.debug("PowerDNS forward config")
+        log.debug("------------------------------------------")
+        for line in open("/etc/powerdns/forward.conf"):
+            log.debug(line.strip())
+        log.debug("------------------------------------------")
+
+    if os.getenv('LOG_LEVEL') == "DEBUG":
+        log.debug("------------------------------------------")
+        log.debug("PowerDNS config")
+        log.debug("------------------------------------------")
+        for line in open("/etc/powerdns/recursor.conf"):
+            log.debug(line.strip())
+        log.debug("------------------------------------------")
 
     # Launch PowerDNS
     log.info("Starting PowerDNS")
