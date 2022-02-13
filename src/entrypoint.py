@@ -183,7 +183,10 @@ def main():
     download_named_root()
 
     forward_conf = parse_forward_zones_conf()
+    log.info(json.dumps(forward_conf))
+
     recursor_conf = parse_recursor_conf()
+    log.debug(json.dumps(recursor_conf))
 
     # Write templates
     template = os.path.join(template_path, "recursor.conf.j2")
