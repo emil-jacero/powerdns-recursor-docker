@@ -175,7 +175,8 @@ def get_forward_zones(base_url, headers, dns_host, dns_port, timeout=30):
         url = f"{base_url}/api/v1/servers/localhost/zones"
         response = requests.get(url, headers=headers)
         for zone in response.json():
-            zones_list.append(f"{zone['name'][:-1]}={dns_host}:{dns_port}")
+            # zones_list.append(f"{zone['name'][:-1]}={dns_host}:{dns_port}")
+            zones_list.append(f"{zone['name']}={dns_host}:{dns_port}")
     return zones_list
 
 
