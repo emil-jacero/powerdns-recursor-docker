@@ -206,13 +206,12 @@ def main():
                              output_file=render_forward_conf,
                              data=forward_conf)
 
-    if os.getenv('LOG_LEVEL') == "DEBUG":
-        log.debug("------------------------------------------")
-        log.debug("PowerDNS forward config")
-        log.debug("------------------------------------------")
-        for line in open("/etc/powerdns/forward.conf"):
-            log.debug(line.strip())
-        log.debug("------------------------------------------")
+    log.info("------------------------------------------")
+    log.info("PowerDNS forward config")
+    log.info("------------------------------------------")
+    for line in open("/etc/powerdns/forward.conf"):
+        log.info(line.strip())
+    log.info("------------------------------------------")
 
     if os.getenv('LOG_LEVEL') == "DEBUG":
         log.debug("------------------------------------------")
