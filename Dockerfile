@@ -45,7 +45,7 @@ RUN mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-re
 ADD src /app
 RUN chown -R 101:101 /app
 
-EXPOSE 53/tcp 53/udp
-
 WORKDIR /app
+EXPOSE 53/tcp 53/udp
+STOPSIGNAL SIGTERM
 ENTRYPOINT /app/entrypoint.py
