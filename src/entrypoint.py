@@ -44,7 +44,7 @@ def get_from_environment(env_search_term="ENV_"):
             k = k.replace(f"{env_search_term}", "").replace("_", "-").lower()
             obj = {k: v}
             enviroment.update(obj)
-    log.debug(enviroment)
+    # log.debug(enviroment)
     return enviroment
 
 
@@ -60,7 +60,7 @@ def get_from_file(file):
             split_line = line.split("=")
             obj = {split_line[0]: split_line[1]}
             pdns_config.update(obj)
-        log.debug(pdns_config)
+        # log.debug(pdns_config)
     except IOError as error:
         log.warning(f"Could not find  '/recursor.conf', moving on...")
     except Exception as error:
@@ -72,7 +72,7 @@ def merge_dicts_overwrite(defaults_dict, dict_list):
     log.info(f"Merging configurations")
     for dict in dict_list:
         defaults_dict.update(dict)
-    log.debug(defaults_dict)
+    log.debug(json.dumps(defaults_dict, indent=2))
     return defaults_dict
 
 
