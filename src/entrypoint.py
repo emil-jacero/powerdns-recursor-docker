@@ -6,6 +6,7 @@ import subprocess
 import json
 import requests
 import time
+import socket
 
 from lib.logger import logger as log
 from lib.template import Template
@@ -21,7 +22,7 @@ render_forward_conf = "/etc/powerdns/forward.conf"
 named_root_path = "/var/named.root"
 
 if os.getenv('DEV') == "true":
-    template_path = os.path.join(base_dir, 'src/templates')
+    template_path = os.path.join(base_dir, 'templates')
     render_recursor_conf = f"{base_dir}/dev/recursor.conf"
     render_forward_conf = f"{base_dir}/dev/forward.conf"
     named_root_path = f"{base_dir}/dev/named.root"
@@ -114,6 +115,35 @@ def parse_recursor_conf():
     return recursor_conf
 
 
+def get_forward_zones(base_url, headers, dns_host, dns_port, timeout=30):
+    zones_list = []
+    sleep_time = 5
+    time_end = time.time() + timeout
+    url = f"{base_url}/api/v1/servers"
+    hostname = None
+    try:
+        hostname = socket.gethostbyname(dns_host)
+        while not connect_check(url, headers) == 200:
+            if time.time() > time_end:
+                log.warning("Could not connect PowerDNS Authorative API")
+                log.warning(
+                    "Going up without getting forward zones from PowerDNS Authorative :(")
+                break
+            log.info(
+                f"Waiting for PowerDNS Authorative API at ({url}) to come online... sleep {sleep_time} seconds")
+            time.sleep(sleep_time)
+        if connect_check(url, headers) == 200:
+            url = f"{base_url}/api/v1/servers/localhost/zones"
+            response = requests.get(url, headers=headers)
+            for zone in response.json():
+                zones_list.append(f"{zone['name'][:-1]}={hostname}:{dns_port}")
+    except:
+        log.warning(
+            f"Unable to resolve hostname ({dns_host}) from PDNS_AUTH_API_HOST. Cannot populate forward.conf :(")
+
+    return zones_list
+
+
 def parse_forward_zones_conf():
     forward_conf_list = []
     # Get forward zones from PowerDNS auth
@@ -155,29 +185,6 @@ def connect_check(url, headers):
     except Exception as error:
         log.error(error)
     return response
-
-
-def get_forward_zones(base_url, headers, dns_host, dns_port, timeout=30):
-    zones_list = []
-    sleep_time = 5
-    time_end = time.time() + timeout
-    url = f"{base_url}/api/v1/servers"
-    while not connect_check(url, headers) == 200:
-        if time.time() > time_end:
-            print("Could not connect PowerDNS Authorative API")
-            print(
-                "Going up without getting forward zones from PowerDNS Authorative :(")
-            break
-        print(
-            f"Waiting for PowerDNS Authorative API at ({url}) to come online... sleep {sleep_time} seconds")
-        time.sleep(sleep_time)
-    if connect_check(url, headers) == 200:
-        url = f"{base_url}/api/v1/servers/localhost/zones"
-        response = requests.get(url, headers=headers)
-        for zone in response.json():
-            # zones_list.append(f"{zone['name'][:-1]}={dns_host}:{dns_port}")
-            zones_list.append(f"{zone['name']}={dns_host}:{dns_port}")
-    return zones_list
 
 
 def main():
