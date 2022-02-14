@@ -178,8 +178,8 @@ def parse_forward_zones_conf():
     api_conf = merge_dicts_overwrite(
         auth_api_defaults, [get_from_environment("PDNS_")])
 
-    if os.getenv('PDNS_AUTH_API_DNS_HOST'):
-        auth_dns_host = os.getenv('PDNS_AUTH_API_DNS_HOST')
+    if os.getenv('PDNS_AUTH_DNS_HOST'):
+        auth_dns_host = os.getenv('PDNS_AUTH_DNS_HOST')
         forward_conf_list = get_forward_zones(
             f"{api_conf['auth-api-protocol']}{api_conf['auth-api-host']}:{api_conf['auth-api-port']}",
             {"X-API-KEY": api_conf['auth-api-key']},
