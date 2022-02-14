@@ -79,11 +79,19 @@ def merge_dicts_overwrite(defaults_dict, dict_list):
 
 def download_named_root():
     named_root_url = "https://www.internic.net/domain/named.root"
-    if not os.getenv('NAMED_ROOT_URL') is None:
+    if os.getenv('NAMED_ROOT_URL'):
         named_root_url = os.getenv('NAMED_ROOT_URL')
     try:
-        request = requests.get(
-            named_root_url, allow_redirects=True, timeout=5)
+        if os.getenv('HTTP_PROXY') is None or os.getenv('HTTPS_PROXY') is None:
+            proxies = {
+                'http': os.getenv('HTTP_PROXY'),
+                'https': os.getenv('HTTPS_PROXY')
+            }
+            request = requests.get(
+                named_root_url, allow_redirects=True, timeout=10, proxies=proxies)
+        else:
+            request = requests.get(
+                named_root_url, allow_redirects=True, timeout=5)
         open(named_root_path, 'wb').write(request.content)
         log.info(
             f"Attempting download of {named_root_url} to {named_root_path}")
