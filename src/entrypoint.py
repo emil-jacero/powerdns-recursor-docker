@@ -78,6 +78,11 @@ def merge_dicts_overwrite(defaults_dict, dict_list):
 
 
 def download_named_root():
+    """
+    Will attempt to download the latest named.root.
+    If HTTP_PROXY or HTTPS_PROXY is specified it will attempt to use that.
+
+    """
     named_root_url = "https://www.internic.net/domain/named.root"
     if os.getenv('NAMED_ROOT_URL'):
         named_root_url = os.getenv('NAMED_ROOT_URL')
@@ -157,7 +162,6 @@ def get_forward_zones(base_url, headers, dns_host, dns_port, timeout=30):
 def parse_forward_zones_conf():
     """
     Get configuration from environment variables which overwrites defaults.
-    It will attempt to download the latest named.root. If HTTP_PROXY or HTTPS_PROXY is specified it will attempt to use that.
 
     Returns:
         [type]: [description]
@@ -174,25 +178,19 @@ def parse_forward_zones_conf():
     api_conf = merge_dicts_overwrite(
         auth_api_defaults, [get_from_environment("PDNS_")])
 
-    auth_api_protocol = api_conf['auth-api-protocol']
-    auth_api_host = api_conf['auth-api-host']
-    auth_api_port = api_conf['auth-api-port']
-    auth_api_dns_port = api_conf['auth-api-dns-port']
-    auth_api_key = api_conf['auth-api-key']
-
-    if api_conf['auth-api-dns-host']:
-        auth_api_dns_host = api_conf['auth-api-dns-host']
+    if os.getenv('PDNS_AUTH_API_DNS_HOST'):
+        auth_dns_host = os.getenv('PDNS_AUTH_API_DNS_HOST')
         forward_conf_list = get_forward_zones(
-            f"{auth_api_protocol}{auth_api_host}:{auth_api_port}",
-            {"X-API-KEY": auth_api_key},
-            auth_api_dns_host,
-            auth_api_dns_port)
+            f"{api_conf['auth-api-protocol']}{api_conf['auth-api-host']}:{api_conf['auth-api-port']}",
+            {"X-API-KEY": api_conf['auth-api-key']},
+            auth_dns_host,
+            api_conf['auth-api-dns-port'])
     else:
         forward_conf_list = get_forward_zones(
-            f"{auth_api_protocol}{auth_api_host}:{auth_api_port}",
-            {"X-API-KEY": auth_api_key},
-            auth_api_host,
-            auth_api_dns_port)
+            f"{api_conf['auth-api-protocol']}{api_conf['auth-api-host']}:{api_conf['auth-api-port']}",
+            {"X-API-KEY": api_conf['auth-api-key']},
+            api_conf['auth-api-host'],
+            api_conf['auth-api-dns-port'])
 
     if not os.getenv('EXTRA_FORWARD') is None:
         forward_conf_list = forward_conf_list + \
