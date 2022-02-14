@@ -82,7 +82,8 @@ def download_named_root():
     if not os.getenv('NAMED_ROOT_URL') is None:
         named_root_url = os.getenv('NAMED_ROOT_URL')
     try:
-        request = requests.get(named_root_url, allow_redirects=True)
+        request = requests.get(
+            named_root_url, allow_redirects=True, timeout=5)
         open(named_root_path, 'wb').write(request.content)
         log.info(
             f"Attempting download of {named_root_url} to {named_root_path}")
