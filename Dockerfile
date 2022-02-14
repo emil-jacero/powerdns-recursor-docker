@@ -32,13 +32,13 @@ ADD requirements.txt /
 RUN pip3 install -r requirements.txt
 
 # Prepare directories for PowerDNS
-RUN touch /recursor.conf && chown -R 101:101 /recursor.conf
-RUN mkdir -p /etc/powerdns/recursor.dv && touch /etc/powerdns/forward.conf
-RUN mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-recursor
+RUN touch /recursor.conf && chown -R 101:101 /recursor.conf; \
+    mkdir -p /etc/powerdns/recursor.dv && touch /etc/powerdns/forward.conf; \
+    mkdir -p /var/run/powerdns-recursor && chown -R 101:101 /var/run/powerdns-recursor
 
 # Add src
 ADD src /app
-RUN chown -R 101:101 /app
+RUN chown -R 101:101 /app; touch /pdns.conf && chown -R 101:101 /pdns.conf
 
 WORKDIR /app
 EXPOSE 53/tcp 53/udp
