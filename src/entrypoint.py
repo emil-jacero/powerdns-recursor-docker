@@ -172,7 +172,6 @@ def parse_forward_zones_conf():
         "auth-api-protocol": "http://",
         "auth-api-host": "127.0.0.1",
         "auth-api-port": 8000,
-        "auth-api-dns-port": 5300,
         "auth-api-key": "CHANGEME"
     }
     api_conf = merge_dicts_overwrite(
@@ -184,13 +183,13 @@ def parse_forward_zones_conf():
             f"{api_conf['auth-api-protocol']}{api_conf['auth-api-host']}:{api_conf['auth-api-port']}",
             {"X-API-KEY": api_conf['auth-api-key']},
             auth_dns_host,
-            api_conf['auth-api-dns-port'])
+            api_conf['auth-dns-port'])
     else:
         forward_conf_list = get_forward_zones(
             f"{api_conf['auth-api-protocol']}{api_conf['auth-api-host']}:{api_conf['auth-api-port']}",
             {"X-API-KEY": api_conf['auth-api-key']},
             api_conf['auth-api-host'],
-            api_conf['auth-api-dns-port'])
+            api_conf['auth-dns-port'])
 
     if not os.getenv('EXTRA_FORWARD') is None:
         forward_conf_list = forward_conf_list + \
